@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Text-to-Image Prompt Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <h1>Text-to-Image Prompt Generator</h1>
+    <div style="text-align: center;">
+        <label for="num-prompts">Number of Prompts:</label>
+        <input type="number" id="num-prompts" name="num-prompts" min="1" max="10000" value="30">
+        <label for="min-length">Min prompt length:</label>
+        <input type="number" id="min-length" name="min-length" min="1" max="10000" value="100">
+        <label for="max-length">Max prompt length:</label>
+        <input type="number" id="max-length" name="max-length" min="1" max="10000" value="256">
+        <label for="max-word-length">Max ?word? length:</label>
+        <input type="number" id="max-word-length" name="max-word-length" min="1" max="10000" value="256">
+        <br><br>
+        <button id="sort-btn" onclick="SortPrompt()">Sort Prompts</button>
+        <button id="generate-btn" onclick="GeneratePrompts()">Generate Prompts</button>
+        <br>
+        <label for="replace-synonyms">Replace words with synonyms:</label>
+        <input type="checkbox" id="replace-synonyms" name="replace-synonyms">
+        <br>
+        Words, phrases, keywords, separated by ",":
+        <br>
+        <textarea id="text-prompt" cols="100" rows="20" style="width: 1000px; height: 500px; resize: both;"></textarea>
+        <br>
+        <br>
+        Output:
+        <br>
+        <button id="copy-output-btn" onclick="copyOutput()">Copy to Clipboard</button>
+        <br>
+        <textarea id="output" style="white-space: nowrap; overflow-x: auto; width: 1500px; height: 200px; resize: both;"></textarea>
+    </div>
+</body>
+
+</html>
