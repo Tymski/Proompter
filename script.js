@@ -26,6 +26,7 @@ function Generate1Prompt() {
     var length = Math.floor(Math.random() * (max - min + 1)) + parseInt(min);
     var text = document.getElementById("text-prompt").value;
     var list = text.split(/[,\n]+/);
+    list = list.map((item) => item.trim());
     var prompt = "";
     while (prompt.length < length) {
         var word = list[Math.floor(Math.random() * list.length)];
@@ -53,10 +54,91 @@ function GeneratePrompts() {
         output += Generate1Prompt() + "\n";
     }
     document.getElementById("output").value = output;
+    AddRandomInfixesToEachPrompt();
+    AddOneWordFromEachLineToEachPrompt();
+    AddPrefixToEachPrompt();
+}
+
+/*
+Take the prefix and add it to each prompt
+*/
+function AddPrefixToEachPrompt() {
+    var prefix = document.getElementById("prefix").value;
+    var suffix = document.getElementById("suffix").value;
+    var text = document.getElementById("output").value;
+    var list = text.split(/[\n]+/);
+    list = list.map((item) => item.trim());
+    var prompt = "";
+    for (var i = 0; i < list.length - 1; i++) {
+        if (prefix.length > 0) prompt += prefix.trim() + ", ";
+        prompt += list[i];
+        if (suffix.length > 0) prompt += ", " + suffix.trim();
+        prompt += "\n";
+
+    }
+    document.getElementById("output").value = prompt;
+}
+
+function AddRandomInfixesToEachPrompt() {
+    var infix = document.getElementById("infix").value;
+    var infixTokens = infix.split(",");
+    infixTokens = infixTokens.map((item) => item.trim());
+    var text = document.getElementById("output").value;
+    var list = text.split(/[\n]+/);
+    list = list.map((item) => item.trim());
+    var prompt = "";
+    for (var i = 0; i < list.length - 1; i++) {
+        var listTokens = list[i].split(",");
+        var mixed = listTokens.concat(infixTokens);
+        var mixed = shuffle(mixed);
+        mixed = mixed.map(item => item.trim()).filter(item => item.length > 0).join(", ");
+        prompt += mixed + "\n";
+    }
+    document.getElementById("output").value = prompt;
+}
+
+function AddOneWordFromEachLineToEachPrompt() {
+    var oneWord = document.getElementById("oneWord").value;
+    var oneWord = oneWord.split(/[\n]+/);
+    oneWord = oneWord.map((item) => item.trim());
+
+    var text = document.getElementById("output").value;
+    var list = text.split(/[\n]+/);
+    list = list.map((item) => item.trim());
+
+    var prompt = "";
+
+    for (var i = 0; i < list.length - 1; i++) {
+
+        var listTokens = list[i].split(",");
+        for (var j = 0; j < oneWord.length; j++) {
+            var words = oneWord[j].split(",").map(w=>w.trim()).filter(w=>w.length>0);
+            const random = Math.floor(Math.random() * words.length);
+            listTokens.push(words[random]);
+        }
+        var listTokens = shuffle(listTokens);
+        listTokens = listTokens.map(item => item.trim()).filter(item => item.length > 0).join(", ");
+        prompt += listTokens + "\n";
+
+    }
+    document.getElementById("output").value = prompt;
 }
 
 function copyOutput() {
     const outputTextarea = document.getElementById("output");
     outputTextarea.select();
     navigator.clipboard.writeText(outputTextarea.value);
+}
+
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
 }
